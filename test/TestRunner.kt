@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
-class TestRunner(val input: List<String>, val expectedOutput: List<String>, val solution: Solution) {
+class TestRunner<T>(val input: List<String>, val expectedOutput: List<String>, val puzzle: Puzzle<T>) {
 
     companion object {
         @JvmStatic
@@ -23,12 +23,12 @@ class TestRunner(val input: List<String>, val expectedOutput: List<String>, val 
 
         fun perpareList(input: String): List<String>
         {
-            return input.split(",").map(String::trim)
+            return input.split(",").map { it.trim() }
         }
     }
 
     @Test
     fun testLevel() {
-        Assert.assertEquals(expectedOutput, solution.solve(input))
+        Assert.assertEquals(expectedOutput, puzzle.solve(input))
     }
 }

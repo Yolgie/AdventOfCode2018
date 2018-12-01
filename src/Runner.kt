@@ -3,18 +3,18 @@ import java.io.File
 val INPUT_DIR = "input/"
 val OUTPUT_DIR = "output/"
 
-interface Solution {
-    val day: String
-    val part: String
-    fun solve(input: List<String>): List<String>
+fun main(args: Array<String>) {
+    run(Day1_2())
 }
 
-fun run(solution: Solution) {
-    val inputFile: File = getInputFile(solution.day)
+fun <T> run(puzzle: Puzzle<T>) {
+    val inputFile: File = getInputFile(puzzle.day)
     val input: List<String> = inputFile.readLines()
-    val output: List<String> = solution.solve(input)
-    val outputFile: File = getOutputFile(solution.day, solution.part)
-    outputFile.writeText(output.joinToString("/n"))
+    val output: List<String> = puzzle.solve(input)
+    val outputFile: File = getOutputFile(puzzle.day, puzzle.part)
+    val outputAsText = output.joinToString("/n")
+    outputFile.writeText(outputAsText)
+    System.out.print(outputAsText)
 }
 
 private fun getInputFile(day: String): File {
@@ -28,8 +28,4 @@ private fun getOutputFile(day: String, part: String = "1", count: Int = 1): File
     } else {
         outputFile
     }
-}
-
-fun main(args: Array<String>) {
-    run(Day1_2())
 }
