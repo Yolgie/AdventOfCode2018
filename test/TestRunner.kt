@@ -4,33 +4,52 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
-class TestRunner<T>(val input: List<String>, val expectedOutput: List<String>, val puzzle: Puzzle<T>) {
-
+class Day02TestRunner<T>(test: TestInput<T>) : TestRunner<T>(test) {
     companion object {
         @JvmStatic
         @Parameterized.Parameters
-        fun data(): Collection<Array<Any>> {
+        fun data(): List<TestInput<*>> {
             return listOf(
-                arrayOf(this.perpareList("+1, +1, +1"), listOf("3"), Day1_1()),
-                arrayOf(this.perpareList("+1, +1, -2"), listOf("0"), Day1_1()),
-                arrayOf(this.perpareList("-1, -2, -3"), listOf("-6"), Day1_1()),
-                arrayOf(this.perpareList("+1, -1"), listOf("0"), Day1_2()),
-                arrayOf(this.perpareList("+3, +3, +4, -2, -4"), listOf("10"), Day1_2()),
-                arrayOf(this.perpareList("-6, +3, +8, +5, -6"), listOf("5"), Day1_2()),
-                arrayOf(this.perpareList("+7, +7, -2, -7, -4"), listOf("14"), Day1_2()),
-                arrayOf(this.perpareList("abcdef, bababc, abbcde, abcccd, aabcdd, abcdee, ababab"), listOf("12"), Day2_1()),
-                arrayOf(this.perpareList("abcde, fghij, klmno, pqrst, fguij, axcye, wvxyz"), listOf("fgij"), Day02_2())
+                TestInput("abcdef, bababc, abbcde, abcccd, aabcdd, abcdee, ababab", "12", Day02part1()),
+                TestInput("abcde, fghij, klmno, pqrst, fguij, axcye, wvxyz", "fgij", Day02part2())
             )
         }
-
-        fun perpareList(input: String): List<String>
-        {
-            return input.split(",").map { it.trim() }
-        }
-    }
-
-    @Test
-    fun testLevel() {
-        Assert.assertEquals(expectedOutput, puzzle.solveInRunner(input))
     }
 }
+
+@RunWith(Parameterized::class)
+class Day01TestRunner<T>(test: TestInput<T>) : TestRunner<T>(test) {
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters
+        fun data(): List<TestInput<*>> {
+            return listOf(
+                TestInput("+1, +1, +1", 3, Day01part1()),
+                TestInput("+1, +1, -2", 0, Day01part1()),
+                TestInput("-1, -2, -3", -6, Day01part1()),
+                TestInput("+1, -1", 0, Day01part2()),
+                TestInput("+3, +3, +4, -2, -4", 10, Day01part2()),
+                TestInput("-6, +3, +8, +5, -6", 5, Day01part2()),
+                TestInput("+7, +7, -2, -7, -4", 14, Day01part2())
+
+            )
+        }
+    }
+}
+
+class TestInput<T>(input: String, expectedOutput: T, val puzzle: Puzzle<T>) {
+    val expectedOutput = listOf(expectedOutput.toString())
+    val input = perpareInput(input)
+
+    fun perpareInput(input: String): List<String> {
+        return input.split(",").map { it.trim() }
+    }
+}
+
+abstract class TestRunner<T>(val test: TestInput<T>) {
+    @Test
+    fun testLevel() {
+        Assert.assertEquals(test.expectedOutput, test.puzzle.solveInRunner(test.input))
+    }
+}
+

@@ -1,4 +1,4 @@
-class Day2_1 : Puzzle<String>("02", "1") {
+class Day02part1 : Puzzle<String>(2, 1) {
     override fun solve(input: List<String>): String {
         val containsExactlyTwoOfAnyLetter = { mapOfChars: Map<Char, Int> -> mapOfChars.containsValue(2) }
         val containsExactlyThreeOfAnyLetter = { mapOfChars: Map<Char, Int> -> mapOfChars.containsValue(3) }
@@ -17,11 +17,11 @@ class Day2_1 : Puzzle<String>("02", "1") {
     }
 }
 
-class Day02_2 : Puzzle<String>("02", "2") {
+class Day02part2 : Puzzle<String>(2, 2) {
     override fun solve(input: List<String>): String {
         input.forEachIndexed { index: Int, one: String ->
             input.subList(index, input.size).forEach { other: String ->
-                if (distance(one, other) == 1) {
+                if (distanceOfOne(one, other)) {
                     return common(one, other)
                 }
             }
@@ -29,14 +29,16 @@ class Day02_2 : Puzzle<String>("02", "2") {
         throw IllegalStateException("No Christmas this year")
     }
 
-    fun distance(one: String, other: String): Int {
-        if (one.length != other.length ) {
+    private fun distanceOfOne(one: String, other: String) = distance(one, other) == 1
+
+    private fun distance(one: String, other: String): Int {
+        if (one.length != other.length) {
             throw IllegalArgumentException("Inputs must be of the same lenght")
         }
         return one.zip(other).filter { pair -> pair.first != pair.second }.count()
     }
 
-    fun common(one: String, other: String): String {
+    private fun common(one: String, other: String): String {
         return one.zip(other).filter { pair -> pair.first == pair.second }.map { pair -> pair.first }.joinToString("")
     }
 }

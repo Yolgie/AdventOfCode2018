@@ -4,7 +4,7 @@ val INPUT_DIR = "input/"
 val OUTPUT_DIR = "output/"
 
 fun main(args: Array<String>) {
-    run(Day02_2())
+    run(Day02part2())
 }
 
 fun <T> run(puzzle: Puzzle<T>) {
@@ -21,7 +21,7 @@ private fun getInputFile(day: String): File {
     return File("$INPUT_DIR/day$day.input")
 }
 
-private fun getOutputFile(day: String, part: String = "1", count: Int = 1): File {
+private fun getOutputFile(day: String, part: Int, count: Int = 1): File {
     val outputFile = File("$OUTPUT_DIR/day$day.$part.$count.output")
     return if (outputFile.exists()) {
         getOutputFile(day, part, count + 1)

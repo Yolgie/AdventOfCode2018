@@ -1,11 +1,10 @@
-
-class Day1_1 : IntPuzzle("01", "1") {
+class Day01part1 : IntPuzzle(1, 1) {
     override fun solve(input: List<Int>): Int {
         return input.sum()
     }
 }
 
-class Day1_2 : IntPuzzle("01", "2") {
+class Day01part2 : IntPuzzle(1, 2) {
     override fun solve(input: List<Int>): Int {
         val frequencyChanges = input
         val reachedFrequencies = mutableListOf<Int>(0)

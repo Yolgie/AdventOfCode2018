@@ -1,6 +1,8 @@
 
 @Suppress("UNCHECKED_CAST")
-abstract class Puzzle<T>(val day: String, val part: String, val parse: (String) -> T = { s -> s as T }) {
+abstract class Puzzle<T>(day: Int, val part: Int, val parse: (String) -> T = { s -> s as T }) {
+    val day = day.toString().padStart(2, '0')
+
     abstract fun solve(input: List<T>): T
 
     open fun solveInRunner(input: List<String>): List<String> {
@@ -8,7 +10,7 @@ abstract class Puzzle<T>(val day: String, val part: String, val parse: (String) 
     }
 }
 
-abstract class MultiLinePuzzle<T>(day: String, part: String, parse: (String) -> T) : Puzzle<T>(day, part, parse) {
+abstract class MultiLinePuzzle<T>(day: Int, part: Int, parse: (String) -> T) : Puzzle<T>(day, part, parse) {
     override fun solve(input: List<T>): T {
         throw Exception("Not applicable method signature")
     }
@@ -20,4 +22,4 @@ abstract class MultiLinePuzzle<T>(day: String, part: String, parse: (String) -> 
     }
 }
 
-abstract class IntPuzzle(day: String, part: String) : Puzzle<Int>(day, part, String::toInt)
+abstract class IntPuzzle(day: Int, part: Int) : Puzzle<Int>(day, part, String::toInt)
