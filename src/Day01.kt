@@ -1,5 +1,5 @@
 
-class Day1_1 : IntPuzzle("01", "2") {
+class Day1_1 : IntPuzzle("01", "1") {
     override fun solve(input: List<Int>): Int {
         return input.sum()
     }

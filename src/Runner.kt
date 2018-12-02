@@ -4,13 +4,13 @@ val INPUT_DIR = "input/"
 val OUTPUT_DIR = "output/"
 
 fun main(args: Array<String>) {
-    run(Day1_2())
+    run(Day02_2())
 }
 
 fun <T> run(puzzle: Puzzle<T>) {
     val inputFile: File = getInputFile(puzzle.day)
     val input: List<String> = inputFile.readLines()
-    val output: List<String> = puzzle.solve(input)
+    val output: List<String> = puzzle.solveInRunner(input)
     val outputFile: File = getOutputFile(puzzle.day, puzzle.part)
     val outputAsText = output.joinToString("/n")
     outputFile.writeText(outputAsText)
