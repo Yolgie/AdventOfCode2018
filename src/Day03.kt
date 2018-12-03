@@ -73,19 +73,18 @@ class Day03part2 : Puzzle<String>(3, 2) {
     override fun solve(input: List<String>): String {
         val claims = ClaimParser.parseClaims(input)
         val grid = mutableMapOf<Coordinate, GridEntry>()
+        val cleanClaims = claims.toMutableList()
         claims.forEach { claim ->
             claim.coordinates.forEach { coordinate ->
-                grid.getOrPut(coordinate) { GridEntry() }.claims.add(claim)
+                val claimsAtCoordinate = grid.getOrPut(coordinate) { GridEntry() }.claims
+                claimsAtCoordinate.add(claim)
+                if (claimsAtCoordinate.size > 1) {
+                    cleanClaims.removeAll(claimsAtCoordinate)
+                }
             }
         }
-        return claims.filter { claim ->
-            val claimCoordinates = claim.coordinates
-            grid.filterKeys { coordinate ->
-                claimCoordinates.contains(coordinate)
-            }.all { grid ->
-                grid.value.claims.size == 1
-            }
-        }.first().id.toString()
+        return cleanClaims.first().id.toString()
+
     }
 }
 

@@ -1,10 +1,14 @@
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 val INPUT_DIR = "input/"
 val OUTPUT_DIR = "output/"
 
 fun main(args: Array<String>) {
-    run(Day03part2())
+    val timeElapsed = measureTimeMillis {
+        run(Day03part2())
+    }
+    println("\n$timeElapsed")
 }
 
 fun <T> run(puzzle: Puzzle<T>) {
