@@ -4,7 +4,7 @@ val INPUT_DIR = "input/"
 val OUTPUT_DIR = "output/"
 
 fun main(args: Array<String>) {
-    run(Day02part2())
+    run(Day03part2())
 }
 
 fun <T> run(puzzle: Puzzle<T>) {

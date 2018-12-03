@@ -4,6 +4,20 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
+class Day03TestRunner<T>(test: TestInput<T>) : TestRunner<T>(test) {
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters
+        fun data(): List<TestInput<*>> {
+            return listOf(
+                TestInput("#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2", "4", Day03part1(), delimiter = "\n"),
+                TestInput("#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2", "3", Day03part2(), delimiter = "\n")
+            )
+        }
+    }
+}
+
+@RunWith(Parameterized::class)
 class Day02TestRunner<T>(test: TestInput<T>) : TestRunner<T>(test) {
     companion object {
         @JvmStatic
@@ -37,12 +51,12 @@ class Day01TestRunner<T>(test: TestInput<T>) : TestRunner<T>(test) {
     }
 }
 
-class TestInput<T>(input: String, expectedOutput: T, val puzzle: Puzzle<T>) {
+class TestInput<T>(input: String, expectedOutput: T, val puzzle: Puzzle<T>, val delimiter: String = ",") {
     val expectedOutput = listOf(expectedOutput.toString())
     val input = perpareInput(input)
 
     fun perpareInput(input: String): List<String> {
-        return input.split(",").map { it.trim() }
+        return input.split(delimiter).map { it.trim() }
     }
 }
 
