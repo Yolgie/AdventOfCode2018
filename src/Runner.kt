@@ -6,7 +6,7 @@ val OUTPUT_DIR = "output/"
 
 fun main(args: Array<String>) {
     val timeElapsed = measureTimeMillis {
-        run(Day03part2())
+        run(Day04part2())
     }
     println("\n$timeElapsed")
 }
