@@ -1,5 +1,5 @@
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST") // if T is String (default) this is a cast from String -> String, other cases should override this
 abstract class Puzzle<T>(day: Int, val part: Int, val parse: (String) -> T = { s -> s as T }) {
     val day = day.toString().padStart(2, '0')
 
@@ -10,7 +10,7 @@ abstract class Puzzle<T>(day: Int, val part: Int, val parse: (String) -> T = { s
     }
 }
 
-abstract class MultiLinePuzzle<T>(day: Int, part: Int, parse: (String) -> T) : Puzzle<T>(day, part, parse) {
+abstract class MultilineSolutionPuzzle<T>(day: Int, part: Int, parse: (String) -> T) : Puzzle<T>(day, part, parse) {
     override fun solve(input: List<T>): T {
         throw Exception("Not applicable method signature")
     }
