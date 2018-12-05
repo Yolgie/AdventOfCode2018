@@ -2,7 +2,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class GuardLogEntry(val id: Int?, val timestamp: LocalDateTime, val action: Action) {
-    constructor(id: Int, entry: GuardLogEntry) : this(id, entry.timestamp, entry.action)
+    constructor(id: Int, logEntry: GuardLogEntry) : this(id, logEntry.timestamp, logEntry.action)
 }
 
 data class Guard(val id: Int, val entrys: List<GuardLogEntry>) {
@@ -10,18 +10,16 @@ data class Guard(val id: Int, val entrys: List<GuardLogEntry>) {
         .filter { it.action != Action.START }
         .zipWithNext()
         .filter { it.first.action == Action.FALL_ASLEEP }
-        .map { it -> it.first.timestamp.minute until it.second.timestamp.minute }
-    // <minute, countAsleep>
-    val sleepTimesCount: Map<Int, Int> = sleepRanges
-        .flatMap { intRange -> intRange.toList() }
+        .map { (start, end) -> start.timestamp.minute until end.timestamp.minute }
+    val sleepTimesCount: Map<Int, Int> = sleepRanges // <minute, countAsleep>
+        .flatMap { range -> range.toList() }
         .groupingBy { it }.eachCount()
     val sleepTimesSum: Int = sleepTimesCount
         .values
         .sum()
     val mostOftenAsleepAtMinute: Int? = sleepTimesCount
         .toList()
-        .sortedBy { (_, count) -> count }
-        .reversed()
+        .sortedByDescending { (_, count) -> count }
         .map { (minute, _) -> minute }
         .firstOrNull()
 
@@ -70,13 +68,14 @@ class GuardLogParser {
 
 class Day04part1 : Puzzle<String>(4, 1) {
     override fun solve(input: List<String>): String {
-        val incompleteGuardLog =
-            GuardLogParser.parseGuardLog(input).sortedBy { guardLogEntry -> guardLogEntry.timestamp }
-        val guards = aggregateGuards(incompleteGuardLog)
+        val incompleteGuardLog = GuardLogParser
+            .parseGuardLog(input)
+            .sortedBy { guardLogEntry -> guardLogEntry.timestamp }
+        val completeGuardLog = addIdToAllLogEntrys(incompleteGuardLog)
+        val guards = aggregateGuards(completeGuardLog)
         return guards
             .filter { guard -> guard.mostOftenAsleepAtMinute != null }
-            .sortedBy { guard -> guard.sleepTimesSum }
-            .reversed()
+            .sortedByDescending { guard -> guard.sleepTimesSum }
             .map { guard -> guard.id * guard.mostOftenAsleepAtMinute!! }
             .first().toString()
     }
@@ -84,29 +83,35 @@ class Day04part1 : Puzzle<String>(4, 1) {
 
 class Day04part2 : Puzzle<String>(4, 2) {
     override fun solve(input: List<String>): String {
-        val incompleteGuardLog =
-            GuardLogParser.parseGuardLog(input).sortedBy { guardLogEntry -> guardLogEntry.timestamp }
-        val guards = aggregateGuards(incompleteGuardLog)
+        val incompleteGuardLog = GuardLogParser
+            .parseGuardLog(input)
+            .sortedBy { guardLogEntry -> guardLogEntry.timestamp }
+        val completeGuardLog = addIdToAllLogEntrys(incompleteGuardLog)
+        val guards = aggregateGuards(completeGuardLog)
         return guards
             .filter { guard -> guard.mostOftenAsleepAtMinute != null }
-            .sortedBy { guard -> guard.sleepTimesCount.get(guard.mostOftenAsleepAtMinute) }
-            .reversed()
+            .sortedByDescending { guard -> guard.sleepTimesCount[guard.mostOftenAsleepAtMinute] }
             .map { guard -> guard.id * guard.mostOftenAsleepAtMinute!! }
             .first().toString()
     }
 }
 
-private fun aggregateGuards(incompleteGuardLog: List<GuardLogEntry>): List<Guard> {
-    val newGuardLog = mutableListOf<GuardLogEntry>()
+private fun aggregateGuards(guardLog: List<GuardLogEntry>): List<Guard> {
+    return guardLog
+        .filter { logEntry -> logEntry.id != null }
+        .groupBy { logEntry -> logEntry.id }
+        .map { (id, logEntries) -> Guard(id!!, logEntries) }
+}
+
+private fun addIdToAllLogEntrys(incompleteGuardLog: List<GuardLogEntry>): List<GuardLogEntry> {
+    val completeGuardLog = mutableListOf<GuardLogEntry>()
     var currentGuardId: Int = incompleteGuardLog.get(0).id
         ?: throw Exception("First action does not contain guard id in: ${incompleteGuardLog.get(0)}")
-    for (entry in incompleteGuardLog) {
-        if (entry.id != null) {
-            currentGuardId = entry.id
+    for (logEntry in incompleteGuardLog) {
+        if (logEntry.id != null) {
+            currentGuardId = logEntry.id
         }
-        newGuardLog.add(GuardLogEntry(currentGuardId, entry))
+        completeGuardLog.add(GuardLogEntry(currentGuardId, logEntry))
     }
-    return newGuardLog
-        .groupBy { guardLogEntry -> guardLogEntry.id }
-        .map { entry -> Guard(entry.key!!, entry.value) }
+    return completeGuardLog.toList()
 }
