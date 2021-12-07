@@ -1,3 +1,6 @@
+# Obsolete 
+Please go to https://github.com/Yolgie/AdventOfCode
+
 # Advent Of Code 2018
 
 Trying to solve as functional as possible, feedback appreciated.
